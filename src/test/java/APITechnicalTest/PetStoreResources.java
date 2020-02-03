@@ -3,29 +3,25 @@ package APITechnicalTest;
 /**
  * Created by Sara on 03/02/2020.
  */
-public class PetStoreResources {
+class PetStoreResources {
 
-    public static String postPet(){
+    static String postPet(){
 
-        String resource = "/pet";
-        return resource;
+        return "/pet";
 
     }
 
-    public static String deletePet(){
+    static String deletePet(){
 
-        String resource = "/pet/{petId}";
-        return resource;
+        return "/pet/{petId}";
     }
 
-    public static String getPet(){
-        String resource = "/pet/{petId}";
-        return resource;
+    static String getPet(){
+        return "/pet/{petId}";
     }
 
-    public static String putUpdatePet(){
-        String resource = "/pet";
-        return resource;
+    static String putUpdatePet(){
+        return "/pet";
     }
 
 

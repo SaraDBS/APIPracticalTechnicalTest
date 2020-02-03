@@ -88,10 +88,9 @@ public class PetStoreTest {
 
     }
 
-    public static JsonPath rawToJson(Response response) {
+    private static JsonPath rawToJson(Response response) {
         String stringResponse = response.asString();
-        JsonPath jsonPath = new JsonPath(stringResponse);
-        return jsonPath;
+        return new JsonPath(stringResponse);
     }
 }
 
