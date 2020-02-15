@@ -6,7 +6,6 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.junit.Before;
 import org.junit.Test;
-
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
@@ -14,48 +13,53 @@ import static org.hamcrest.CoreMatchers.equalTo;
 public class PetStoreTest {
 
     @Before
-    public void setBaseUrl()  {
+    public void setBaseUrl() {
 
         RestAssured.baseURI = "https://petstore.swagger.io/v2";
+        RestAssured.basePath = "/pet";
     }
 
     @Test
     public void createAndReturnPet() {
 
-        Response response = given().
+        String response = given().
                 queryParam("key", "special-key").
                 body(PetPayload.getPostBody()).
                 and().contentType(ContentType.JSON).
                 when().
-                post(PetStoreResources.postPet()).
+                log().
+                all().
+                post().
                 then().
                 assertThat().statusCode(200).and().contentType(ContentType.JSON)
                 .extract()
-                .response();
+                .response().asString();
 
-        String petId = String.valueOf(rawToJson(response).get("id"));
 
+        JsonPath jsonPath = new JsonPath(response);
+        String petId = String.valueOf(jsonPath.get("id"));
         given().
                 queryParam("key", "special-key").
-                get(PetStoreResources.getPet().replace("{petId}",petId)).
+                get(PetStoreResources.readPetId().replace("{petId}", petId)).
                 then().assertThat().
                 statusCode(200).
-                and().body("status",equalTo("available")).
-                and().body("id",equalTo(5)).
-                and().body("name",equalTo("Ruby"));
-
-
+                and().body("status", equalTo("available")).
+                and().body("id", equalTo(5)).
+                and().body("name", equalTo("Ruby"));
     }
 
+
     @Test
-    public void updateAndVerifyPet(){
+    public void updateAndVerifyPet() {
 
         Response response = given().
                 queryParam("key", "special-key").
                 body(PetPayload.getPutBody()).
                 and().contentType(ContentType.JSON).
                 when().
-                put(PetStoreResources.putUpdatePet()).
+                log().
+                all().
+                put().
                 then().
                 assertThat().statusCode(200).and().contentType(ContentType.JSON)
                 .extract()
@@ -65,24 +69,24 @@ public class PetStoreTest {
 
         given().
                 queryParam("key", "special-key").
-                get(PetStoreResources.getPet().replace("{petId}",petId)).
+                get(PetStoreResources.readPetId().replace("{petId}", petId)).
                 then().assertThat().
                 statusCode(200).
-                and().body("name",equalTo("Lola"));
+                and().body("name", equalTo("Lola"));
     }
 
     @Test
-    public void deleteAndVerifyPetDeleted(){
+    public void deleteAndVerifyPetDeleted() {
 
         given().
                 queryParam("key", "special-key").
-                delete(PetStoreResources.deletePet().replace("{petId}","5")).
+                delete(PetStoreResources.readPetId().replace("{petId}", "5")).
                 then().assertThat().
                 statusCode(200);
 
         given().
                 queryParam("key", "special-key").
-                get(PetStoreResources.getPet().replace("{petId}","5")).
+                get(PetStoreResources.readPetId().replace("{petId}", "5")).
                 then().assertThat().
                 statusCode(404);
 

@@ -5,24 +5,8 @@ package APITechnicalTest;
  */
 class PetStoreResources {
 
-    static String postPet(){
-
-        return "/pet";
-
+    static String readPetId(){
+        return "/{petId}";
     }
-
-    static String deletePet(){
-
-        return "/pet/{petId}";
-    }
-
-    static String getPet(){
-        return "/pet/{petId}";
-    }
-
-    static String putUpdatePet(){
-        return "/pet";
-    }
-
 
 }
